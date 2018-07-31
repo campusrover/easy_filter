@@ -15,8 +15,14 @@ class LidarObstacle():
         self.new_time = time
 
     def update(self):
-        self.reading = (self.new_reading + self.reading)/2
-        self.noise = self.new_noise
+        [new_mean, new_noise] = self.kalman_update(self.reading, self.noise, self.new_reading, self.new_noise)
+        self.reading = new_mean
+        self.noise = new_noise
         self.time = self.new_time
+
+    def kalman_update(self, mean1, var1, mean2, var2):
+        new_mean = (var2 * mean1 + var1 * mean2) / (var1 + var2)
+        new_var = 1 / (1 / var1 + 1 / var2)
+        return [new_mean, new_var]
 
     

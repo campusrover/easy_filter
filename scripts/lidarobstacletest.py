@@ -11,21 +11,21 @@ class MyFirstTests(unittest.TestCase):
         self.data3 = np.random.uniform(32, 33, size=360)
         self.lo1 = LidarObstacle()
 
-    def testData(self):
+    def test_data(self):
         self.assertEqual(len(self.data1), 360)
-    
-    def testMeasureOnce(self):
+
+    def test_measureOnce(self):
         self.lo1.measure(1, self.data1, 0)
         self.assertAlmostEqual(self.lo1.new_reading, 30.25, 0)
 
-    def testTwice(self):
+    def test_twice(self):
         self.lo1.measure(1, self.data1, 0)
         self.lo1.update()
         self.lo1.measure(2, self.data2, 0)
         self.lo1.update()
         self.assertAlmostEqual(self.lo1.reading, 30.75, 0)
     
-    def testThrice(self):
+    def test_thrice(self):
         self.lo1.measure(1, self.data1, 0)
         self.lo1.update()
         self.lo1.measure(2, self.data2, 0)

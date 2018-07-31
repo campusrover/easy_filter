@@ -1,14 +1,14 @@
 {
-  "python.pythonPath": "/usr/bin/python3",
+  "python.pythonPath": "/Users/pitosalas/miniconda3/bin/python",
   "python.linting.enabled": true,
-  "python.linting.pylintEnabled": false,
+  "python.linting.pylintEnabled": true,
   "python.linting.flake8Enabled": false,
   "python.unitTest.unittestArgs": [
     "-v",
     "-s",
     ".",
     "-p",
-    "test*.py"
+    "*test*.py"
   ],
   "python.unitTest.pyTestEnabled": false,
   "python.unitTest.nosetestsEnabled": false,

@@ -3,7 +3,7 @@ import numpy as np
 class LidarObstacle():
     def __init__(self):
         self.reading = 30
-        self.noise = 0
+        self.noise = 100
         self.time = 0
     
     def measure(self, time, data, noise):
@@ -20,9 +20,13 @@ class LidarObstacle():
         self.noise = new_noise
         self.time = self.new_time
 
+    def kalman_predict(self, mean1, var1, mean2, var2):
+        new_mean = mean1 + mean2
+        new_var = var1 + var2
+        return [new_mean, new_var]
+
     def kalman_update(self, mean1, var1, mean2, var2):
         new_mean = (var2 * mean1 + var1 * mean2) / (var1 + var2)
         new_var = 1 / (1 / var1 + 1 / var2)
         return [new_mean, new_var]
-
     

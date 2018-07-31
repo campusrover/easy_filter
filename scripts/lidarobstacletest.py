@@ -3,7 +3,7 @@ import numpy as np
 
 from lidarobstacle import LidarObstacle
 
-class MyFirstTests(unittest.TestCase):
+class MyFirstTest(unittest.TestCase):
 
     def setUp(self):
         self.data1 = np.random.uniform(30, 31, size=360)
@@ -34,5 +34,23 @@ class MyFirstTests(unittest.TestCase):
         self.lo1.update()
         self.assertAlmostEqual(self.lo1.reading, 31.5, 0)
 
+class TestKalman(unittest.TestCase):
+
+    def setUp(self):
+        self.measurements = [5., 6. , 7., 9., 10.]
+        self.motion = [1., 1., 2., 1., 1.]
+        self.measurement_sig = 4.
+        self.motion_sig = 2.
+        self.mu = 0.
+        self.sig = 10000.
+        self.lo2 = LidarObstacle()
+    
+    def loop_test(self):
+        val = [self.mu, self.sig]
+        for i in range(len(self.measurements)):
+            val = self.lo2.kalman_update(val[0], val[1], self.measurements[i], self.measurement_sig)
+            val = self.lo2.kalman_predict(val[0], val[1], self.motion[i], self.motion_sig)
+        print(val)
+        
 if __name__ == '__main__':
     unittest.main()

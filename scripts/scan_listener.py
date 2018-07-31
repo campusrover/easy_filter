@@ -1,15 +1,22 @@
 #!/usr/bin/env python
 import rospy
 from sensor_msgs.msg import LaserScan
+from easy_filter.msg import Obstacle
 import numpy as np
 
 def callback(msg):
-    print ("***********")
-    print (type(msg.ranges[0]))
-    a = np.array(msg.ranges)
-    print(len(a))
+    if (msg.ranges[0] < 0.3):
+        report_obstacle(msg.ranges[0])
 
-rospy.init_node('easy_listener')
-sub = rospy.Subscriber('/scan', LaserScan, callback)
-rospy.spin()
+def report_obstacle(dist):
+    print (dist)
+    obstacle = Obstacle()
+    obstacle.distance = dist
+    pub.publish(obstacle)
+
+if __name__ == '__main__':
+    rospy.init_node('easy_listener')
+    sub = rospy.Subscriber('/scan', LaserScan, callback)
+    pub = rospy.Publisher('obstacle',Obstacle, queue_size =10)
+    rospy.spin()
 

@@ -3,6 +3,7 @@ import rospy
 from sensor_msgs.msg import LaserScan
 from easy_filter.msg import Obstacle
 import numpy as np
+import lidarutils as lu
 
 class ObstacleDetector():
 
@@ -12,7 +13,6 @@ class ObstacleDetector():
         self.pub = rospy.Publisher('obstacle', Obstacle, queue_size =10)
         self.min_distance = min_distance
         self.beam_width = beam_width
-        self.detect()
 
     def scan(self, scan):
         dist = scan.ranges[0]
@@ -34,8 +34,10 @@ class ObstacleDetector():
 
 def main():
     rospy.init_node('obstacle_detector')
+    obdetect = ObstacleDetector(0.3, 10)
+
     try:
-        obdetect = ObstacleDetector(0.3, 10)
+        obdetect.detect()
     except rospy.ROSInterruptException:
         print("Exception")
 

@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="easy_filter" type="scan_listener.py" name="easy_listener" output="screen"></node>
+    <node pkg="easy_filter" type="lively.py" name="lively" output="screen"></node>
+</launch>

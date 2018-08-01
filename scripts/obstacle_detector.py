@@ -7,18 +7,20 @@ import numpy as np
 class ObstacleDetector():
 
     def __init__(self):
-        self.sub = rospy.Subscriber('/scan', LaserScan, self.scan, queue_size=1)
-        self.pub = rospy.Publisher('obstacle', Obstacle, self.scan, queue_size =10)
-        self.bumper()
+        print("init")
+        self.sub = rospy.Subscriber('scan', LaserScan, self.scan, queue_size=1)
+        self.pub = rospy.Publisher('obstacle', Obstacle, queue_size =10)
+        self.detect()
 
     def scan(self, scan):
         dist = scan.ranges[0]
         if (dist >= scan.range_min and dist < scan.range_max):
-            print(dist)
             if (dist < 0.3):
-                self.report_obstacle(scan.ranges[0])
+                print(dist)
+                self.report_obstacle(dist)
 
-    def bumper(self):
+
+    def detect(self):
         while not rospy.is_shutdown():
             rospy.spin()
 

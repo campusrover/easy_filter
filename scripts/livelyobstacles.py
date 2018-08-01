@@ -8,56 +8,41 @@ import numpy as np
 class LivelyObstacles():
 
     def __init__(self):
-        self.pub = rospy.Publisher('cmd_vel', Twist, queue_size=10)
-        self.sub = rospy.Subscriber('obstacle', Obstacle, self.obstacle_detected)
+        print("Init")
+        self.pub = rospy.Publisher('cmd_vel', Twist, queue_size=25)
+        self.sub = rospy.Subscriber('obstacle', Obstacle, self.obstacle_reported)
         self.obstacle = 0
-
-    def scan(self, scan):
-        dist = scan.ranges[0]
-        print(dist)
-        if (dist >= scan.range_min and dist < scan.range_max):
-            print(dist)
-            if (dist < 0.3):
-                self.report_obstacle(scan.ranges[0])
-
-    def bumper(self):
-        while not rospy.is_shutdown():
-            rospy.spin()
-
-    def report_obstacle(self, dist):
-        print ("Measured obstacle at" , dist)
-        obstacle = Obstacle()
-        obstacle.distance = dist
-        self.pub.publish(obstacle)
-
+        
     def circle_step(self):
-        print("Circle step")
         twist = Twist()
         twist.linear.x = 0.07; twist.linear.y = 0.0; twist.linear.z = 0.0
         twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = 0.2
         self.pub.publish(twist)
 
-    def obstacle_detected(self, msg):
+    def obstacle_reported(self, msg):
         print("obstacle detected")
         self.obstacle = 20
 
-    def avoidance_step():
-        print("avoidance step")
+    def avoidance_step(self):
         twist = Twist()
-        twist.linear.x = -0.02; twist.linear.y = 0.0; twist.linear.z = 0.0
-        twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = 0.3
+        twist.linear.x = -0.04; twist.linear.y = 0.0; twist.linear.z = 0.0
+        twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = 0.1
+        print(twist)
         self.pub.publish(twist)
 
     def travel(self):
         print("travel")
+        self.rate = rospy.Rate(10)
         while(not rospy.is_shutdown()):
             if (self.obstacle > 0):
                 self.avoidance_step()
                 self.obstacle -= 1
-            #else:
-                #self.circle_step()
+            else:
+                self.circle_step()
+            self.rate.sleep()
     
     def full_stop(self):
+        print("FullStop")
         twist = Twist()
         twist.linear.x = 0.0; twist.linear.y = 0.0; twist.linear.z = 0.0
         twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = 0.0
@@ -66,6 +51,7 @@ class LivelyObstacles():
 
 def main():
     rospy.init_node('livelyobstacles')
+    pub = rospy.Publisher('cmd_vel', Twist, queue_size=25)
     lively = LivelyObstacles()
 
     try:

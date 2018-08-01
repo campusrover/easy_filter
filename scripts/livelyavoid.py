@@ -17,21 +17,34 @@ def getKey():
     return key
 
 # Simple starting point, drives in a circle
-def circle():
+def circle_step():
     twist = Twist()
     twist.linear.x = 0.07; twist.linear.y = 0.0; twist.linear.z = 0.0
     twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = 0.2
-    while(not facing_obstacle):
-        key = getKey()
-        sys.stdout.write("."); sys.stdout.flush()
-        pub.publish(twist)
-        if (key == '\x03'):
-            break
+    pub.publish(twist)
 
 def obstacle_detected(msg):
-    facing_obstacle = True
+    obstacle = 100
     print("obstacle detected!")
-    facing_obstacle = False
+
+def avoidance_step():
+    twist = Twist()
+    twist.linear.x = 0.07; twist.linear.y = 0.0; twist.linear.z = 0.0
+    twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = 0.2
+    pub.publish(twist)
+
+
+def travel():
+    while(True):
+        key = getKey()
+        sys.stdout.write("."); sys.stdout.flush()
+        if (key == '\x03'):
+            break
+        if (obstacle > 0):
+            avoidance_step()
+            obstacle--
+        else:
+            circle_step()
 
 if __name__ == '__main__':
     facing_obstacle = False
@@ -41,7 +54,7 @@ if __name__ == '__main__':
     sub = rospy.Subscriber('obstacle, Obstacle'. obstacle_detected)
     
     try:
-        circle()
+        travel()
     except:
         print("Unexpected Exception", sys.exc_info())
     finally:

@@ -5,11 +5,11 @@ from easy_filter.msg import Obstacle
 import numpy as np
 
 def callback(msg):
-    if (msg.ranges[0] < 0.3):
+    if (msg.ranges[0] < 0.15):
         report_obstacle(msg.ranges[0])
 
 def report_obstacle(dist):
-    print (dist)
+    print ("Measured obstacle at" , dist)
     obstacle = Obstacle()
     obstacle.distance = dist
     pub.publish(obstacle)

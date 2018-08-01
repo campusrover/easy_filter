@@ -18,23 +18,29 @@ def getKey():
 
 # Simple starting point, drives in a circle
 def circle_step():
+    print("Circle step")
     twist = Twist()
     twist.linear.x = 0.07; twist.linear.y = 0.0; twist.linear.z = 0.0
     twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = 0.2
     pub.publish(twist)
 
 def obstacle_detected(msg):
-    obstacle = 100
+    global obstacle
+    print("obstacle detected")
+    obstacle = 20
     print("obstacle detected!")
 
 def avoidance_step():
+    print("avoidance step")
     twist = Twist()
-    twist.linear.x = 0.07; twist.linear.y = 0.0; twist.linear.z = 0.0
-    twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = 0.2
+    twist.linear.x = -0.02; twist.linear.y = 0.0; twist.linear.z = 0.0
+    twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = 0.3
     pub.publish(twist)
 
 
 def travel():
+    global obstacle
+    print("travel")
     while(True):
         key = getKey()
         sys.stdout.write("."); sys.stdout.flush()
@@ -42,16 +48,16 @@ def travel():
             break
         if (obstacle > 0):
             avoidance_step()
-            obstacle--
+            obstacle -= 1
         else:
             circle_step()
 
 if __name__ == '__main__':
-    facing_obstacle = False
     settings = termios.tcgetattr(sys.stdin)
+    obstacle = 0
     rospy.init_node('lively')
     pub = rospy.Publisher('cmd_vel', Twist, queue_size=10)
-    sub = rospy.Subscriber('obstacle, Obstacle'. obstacle_detected)
+    sub = rospy.Subscriber('obstacle', Obstacle, obstacle_detected)
     
     try:
         travel()

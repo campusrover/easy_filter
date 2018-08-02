@@ -2,7 +2,7 @@
     <node pkg="easy_filter" type="scan_listener.py" name="easy_listener" output="screen"></node>
     <node pkg="easy_filter" type="lively.py" name="lively" output="screen"></node>
     <node pkg="easy_filter" type="livelyavoid.py" name="livelyavoid" output="screen"></node>
-    <node pkg="easy_filter" type="obstacle_detector.py" name="obstacle_detector" output="screen"></node>
+    <node pkg="easy_filter" type="obstacledetector.py" name="obstacledetector" output="screen"></node>
     <node pkg="easy_filter" type="livelyobstacles.py" name="livelyobstacles" output="screen"></node>
 
 </launch>

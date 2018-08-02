@@ -1,9 +1,10 @@
 #!/usr/bin/env python
+
 import rospy
 from sensor_msgs.msg import LaserScan
 from easy_filter.msg import Obstacle
 import numpy as np
-import lidarutils as lu
+import lidarfilter as lu
 
 class ObstacleDetector():
 
@@ -11,28 +12,27 @@ class ObstacleDetector():
         print("init")
         self.sub = rospy.Subscriber('scan', LaserScan, self.scan, queue_size=1)
         self.pub = rospy.Publisher('obstacle', Obstacle, queue_size =10)
-        self.lu = lu.LidarUtils(4) # front=0, right=1, back=2, left=3
-
+        self.lf = lu.LidarFilter(slice_count) # 0 is directly in front and 9 exactly behind
     def scan(self, scan):
-        lu.data(scan.ranges)
-        if (self.lu.min <= 0.3)):
+        self.lf.data(scan.ranges, scan.range_min, scan.range_max)
+        if (self.lf.min <= 0.3):
             self.report_obstacle()
 
     def detect(self):
         while not rospy.is_shutdown():
             rospy.spin()
 
-    def report_obstacle(self, dist):
-        print ("Measured obstacle at" , dist)
+    def report_obstacle(self):
+        print ("Measured obstacle", self.lf.min)
         obstacle = Obstacle()
-        obstacle.distance = self.lu.min()
-        obstacle.direction = self.lu.minpos() # 0, 1, 2, 3
+        obstacle.distance = self.lf.min
+        obstacle.direction = self.lf.minpos # 0, 1, 2, 3
         self.pub.publish(obstacle)
 
 
 def main():
     rospy.init_node('obstacle_detector')
-    obdetect = ObstacleDetector(10)
+    obdetect = ObstacleDetector(18)
 
     try:
         obdetect.detect()

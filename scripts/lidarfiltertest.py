@@ -20,12 +20,12 @@ class MyFirstTest(unittest.TestCase):
         self.assertEqual(len(self.data1), 360)
 
     def test_detect(self):
-        self.lu1.data(self.data1)
+        self.lu1.data(self.data1, min=0, max=2)
         self.assertTrue(self.lu1.minpos == 0)
 
     def test_detect1(self):
         self.lu2 = LidarFilter(4)
-        self.lu2.data(self.data2)
+        self.lu2.data(self.data2, min=0, max=2)
         self.assertAlmostEqual(self.lu2.min, 0.3, 2)
         self.assertEqual(self.lu2.minpos, 1)
 
@@ -33,7 +33,7 @@ class MyFirstTest(unittest.TestCase):
         lu3 = LidarFilter(36)
         data3 = [0.3] * 360
         data3[185] = 0.2
-        lu3.data(data3)
+        lu3.data(data3, min=0, max=2)
         self.assertAlmostEqual(lu3.min, 0.29, 2)
         self.assertEqual(lu3.minpos, 19)
 

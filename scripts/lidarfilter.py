@@ -19,7 +19,6 @@ class LidarFilter():
         self.mean_per_slice = np.nanmean(darray.reshape((self.slices, -1)),axis=1)
         self.min = np.nanmin(self.mean_per_slice)
         self.minpos = np.nanargmin(self.mean_per_slice)
-        print(self.min, self.minpos, self.mean_per_slice)
 
 
     def detect(self):

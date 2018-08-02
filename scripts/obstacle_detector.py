@@ -11,15 +11,12 @@ class ObstacleDetector():
         print("init")
         self.sub = rospy.Subscriber('scan', LaserScan, self.scan, queue_size=1)
         self.pub = rospy.Publisher('obstacle', Obstacle, queue_size =10)
-        self.min_distance = min_distance
-        self.beam_width = beam_width
+        self.lu = lu.LidarUtils(min_distance, beam_width)
 
     def scan(self, scan):
-        dist = scan.ranges[0]
-        if (dist >= scan.range_min and dist < scan.range_max):
-            if (dist < self.min_distance):
-                self.report_obstacle(dist)
-
+        lu.data(scan.ranges)
+        if (lu.too_close()):
+            self.report_obstacle()
 
     def detect(self):
         while not rospy.is_shutdown():
@@ -28,7 +25,8 @@ class ObstacleDetector():
     def report_obstacle(self, dist):
         print ("Measured obstacle at" , dist)
         obstacle = Obstacle()
-        obstacle.distance = dist
+        obstacle.distance = lu.distance()
+        obstacle.direction = lu.direction()
         self.pub.publish(obstacle)
 
 

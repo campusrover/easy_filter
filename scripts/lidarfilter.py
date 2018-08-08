@@ -13,6 +13,7 @@ class LidarFilter():
     def data(self, data_array, min, max):
         assert(len(data_array)==360)
         darray = np.array(data_array)
+        self.raw = darray
         darray[darray <= min] = np.nan
         darray[darray > max] = np.nan
         darray = np.roll(darray, self.deg_per_slice/2)
@@ -21,6 +22,12 @@ class LidarFilter():
         self.minpos = np.nanargmin(self.mean_per_slice)
 
 
-    def detect(self):
-        return(self.distance < self.min_distance)
+    def printraw(self):
+        raw1 = self.raw.reshape((self.slices, -1))
+        #raw2 = raw1 * 100
+        #raw3 = raw2.astype(int)
+        np.set_printoptions(precision=1, linewidth=500, nanstr="n", infstr="i")
+        print(raw1)
+        
+
 

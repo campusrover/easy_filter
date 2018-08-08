@@ -25,7 +25,8 @@ class ObstacleDetector():
             rospy.spin()
 
     def report_obstacle(self):
-        print ("Measured obstacle", self.lf.min, self.lf.minpos)
+        print ("Obst detcted: dist=%f dir=%d" % (self.lf.min, self.lf.minpos))
+        #print(self.lf.printraw())
         obstacle = Obstacle()
         obstacle.distance = self.lf.min
         obstacle.direction = self.lf.minpos # 0, 1, 2, 3...

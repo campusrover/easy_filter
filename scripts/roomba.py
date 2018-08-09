@@ -35,7 +35,7 @@ class Roomba():
 
     def straight_step(self):
         twist = Twist()
-        twist.linear.x = 0.1; twist.linear.y = 0.0; twist.linear.z = 0.0
+        twist.linear.x = 0.05; twist.linear.y = 0.0; twist.linear.z = 0.0
         twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = 0.0
         self.pub.publish(twist)
 

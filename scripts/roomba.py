@@ -24,6 +24,7 @@ class Roomba():
         self.distance = msg.distance
 
     def avoidance_step(self):
+        # positive angle means rotate left
         twist = Twist()
         rotate_angle = 0.5
         if (self.direction == 1):
@@ -49,7 +50,7 @@ class Roomba():
             print("%d State change from %d to %d" % (self.counter, self.last_state, self.state))
         self.last_state = self.state
 
-    def travel(self):
+    def travel(self):ddddddd
         self.rate = rospy.Rate(10)
         while(not rospy.is_shutdown()):
             self.check_state()
